@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>导航网站</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+      <div class="wrapper" id="page"></div>
+    </main>
+    <script>
+      var keys = {
+        0: ['q','w','e','r','t','y','u','i','o','p'],
+        1: ['a','s','d','f','g','h','j','k','l'],
+        2: ['z','x','c','v','b','n','m'],
+        length: 3
+      }
+
+
+      var hash = {
+        'q': 'www.qq.com',
+        'w': 'www.weibo.com',
+        'e': 'www.ele.me',
+        'r': 'www.renren.com',
+        't': 'www.taobao.com',
+        'y': 'www.youtube.com',
+        'u': 'www.uc.cn',
+        'i': 'www.iqiyi.com',
+        'o': 'www.oschina.net',
+        'p': 'www.pixiv.net',
+        'a': 'www.amazon.com',
+        's': 'www.segmentfault.com',
+        'd': 'www.douban.com',
+        'f': 'www.facebook.com',
+        'g': 'www.google.com',
+        'h': 'www.hao123.com',
+        'j': 'www.juejin.im',
+        'k': 'www.kankanews.com',
+        'l': 'www.lofter.com',
+        'z': 'www.zhihu.com',
+        'x': 'www.xiaomi.com',
+        'c': 'www.csdn.net',
+        'v': 'www.v2ex.com',
+        'b': 'www.bilibili.com',
+        'n': 'www.neets.cc',
+        'm': 'www.meituan.com'
+      }
+      // 取出 localStorage 中新的 hash
+      var hashInLocalStorage = JSON.parse(localStorage.getItem('local') || 'null')
+      // 覆盖到原来的 hash
+      if(hashInLocalStorage) {
+        hash = hashInLocalStorage
+      }
+
+
+      index = 0
+      while(index < keys['length']){
+        var div1 = document.createElement('div')
+        page.appendChild(div1)
+        var rows = keys[index]
+        index1 = 0
+        while(index1 < rows['length']){
+          var key = document.createElement('kbd')
+          key.textContent = rows[index1]
+          var button = document.createElement('button')
+          button.textContent = '编辑'
+          button.id = rows[index1]
+          button.onclick = function(sdfasdfa){
+            var clickKey = (sdfasdfa['target']['id'])
+            var newSite = prompt()
+            hash[clickKey] = newSite // hash 变更
+            localStorage.setItem('local', JSON.stringify(hash))
+          }
+          key.appendChild(button)
+          div1.appendChild(key)
+          index1 = index1 + 1
+        }
+        index = index + 1
+      }
+
+      document.onkeypress = function(sadgagfa) {
+        var whichKey = sadgagfa['key']
+        var site = 'http://' + hash[whichKey]
+        // console.log(site)
+        // location.href = site
+        window.open(site, '_blank')
+      }
+
+    </script>
+</body>
+</html>
