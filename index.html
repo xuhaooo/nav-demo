@@ -1,93 +1,161 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>导航网站</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <main>
-      <div class="wrapper" id="page"></div>
-    </main>
-    <script>
-      var keys = {
-        0: ['q','w','e','r','t','y','u','i','o','p'],
-        1: ['a','s','d','f','g','h','j','k','l'],
-        2: ['z','x','c','v','b','n','m'],
-        length: 3
-      }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>导航网站</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<main>
+			<div class="wrapper" id="page"></div>
+		</main>
+		<script>
+			// 1.初始化数据
+			var hashA = init()
+			var keys = hashA.keys
+			var hash = hashA.hash
 
+			// 2.生成键盘
+			generateKeyboard(keys, hash)
 
-      var hash = {
-        'q': 'www.qq.com',
-        'w': 'www.weibo.com',
-        'e': 'www.ele.me',
-        'r': 'www.renren.com',
-        't': 'www.taobao.com',
-        'y': 'www.youtube.com',
-        'u': 'www.uc.cn',
-        'i': 'www.iqiyi.com',
-        'o': 'www.oschina.net',
-        'p': 'www.pixiv.net',
-        'a': 'www.amazon.com',
-        's': 'www.segmentfault.com',
-        'd': 'www.douban.com',
-        'f': 'www.facebook.com',
-        'g': 'www.google.com',
-        'h': 'www.hao123.com',
-        'j': 'www.juejin.im',
-        'k': 'www.kankanews.com',
-        'l': 'www.lofter.com',
-        'z': 'www.zhihu.com',
-        'x': 'www.xiaomi.com',
-        'c': 'www.csdn.net',
-        'v': 'www.v2ex.com',
-        'b': 'www.bilibili.com',
-        'n': 'www.neets.cc',
-        'm': 'www.meituan.com'
-      }
-      // 取出 localStorage 中新的 hash
-      var hashInLocalStorage = JSON.parse(localStorage.getItem('local') || 'null')
-      // 覆盖到原来的 hash
-      if(hashInLocalStorage) {
-        hash = hashInLocalStorage
-      }
+			// 3.监听键盘
+			listenToKeyboard(hash)
 
+			// 封装函数
+			function init() {
+				var keys = {
+					0: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+					1: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+					2: ['z', 'x', 'c', 'v', 'b', 'n', 'm'],
+					length: 3,
+				}
 
-      index = 0
-      while(index < keys['length']){
-        var div1 = document.createElement('div')
-        page.appendChild(div1)
-        var rows = keys[index]
-        index1 = 0
-        while(index1 < rows['length']){
-          var key = document.createElement('kbd')
-          key.textContent = rows[index1]
-          var button = document.createElement('button')
-          button.textContent = '编辑'
-          button.id = rows[index1]
-          button.onclick = function(sdfasdfa){
-            var clickKey = (sdfasdfa['target']['id'])
-            var newSite = prompt()
-            hash[clickKey] = newSite // hash 变更
-            localStorage.setItem('local', JSON.stringify(hash))
-          }
-          key.appendChild(button)
-          div1.appendChild(key)
-          index1 = index1 + 1
-        }
-        index = index + 1
-      }
+				var hash = {
+					q: 'www.qq.com',
+					w: 'www.weibo.com',
+					e: 'www.ele.me',
+					r: 'www.renren.com',
+					t: 'www.taobao.com',
+					y: 'www.youtube.com',
+					u: 'www.uc.cn',
+					i: 'www.iqiyi.com',
+					o: 'www.oschina.net',
+					p: 'www.pixiv.net',
+					a: 'www.amazon.com',
+					s: 'www.segmentfault.com',
+					d: 'www.douban.com',
+					f: 'www.facebook.com',
+					g: 'www.google.com',
+					h: 'www.hao123.com',
+					j: 'www.juejin.im',
+					k: 'www.kankanews.com',
+					l: 'www.lofter.com',
+					z: 'www.zhihu.com',
+					x: 'www.xiaomi.com',
+					c: 'www.csdn.net',
+					v: 'www.v2ex.com',
+					b: 'www.bilibili.com',
+					n: 'www.neets.cc',
+					m: 'www.meituan.com',
+				}
+				// 取出 localStorage 中新的 hash
+				var hashInLocalStorage = getFromLocalStorage('local')
+				// 覆盖到原来的 hash
+				if (hashInLocalStorage) {
+					hash = hashInLocalStorage
+				}
 
-      document.onkeypress = function(sadgagfa) {
-        var whichKey = sadgagfa['key']
-        var site = 'http://' + hash[whichKey]
-        // console.log(site)
-        // location.href = site
-        window.open(site, '_blank')
-      }
+				return {
+					keys: keys,
+					hash: hash,
+				}
+			}
 
-    </script>
-</body>
+			function generateKeyboard(keys, hash) {
+				for (index = 0; index < keys['length']; index++) {
+					var div1 = tag('div')
+					div1.className = 'row'
+
+					page.appendChild(div1)
+
+					var rows = keys[index]
+					for (var index1 = 0; index1 < rows['length']; index1++) {
+						var span = createSpan(rows[index1])
+
+						var button = createButton(rows[index1])
+
+						var image = createImg(hash[rows[index1]])
+
+						var key = tag('kbd')
+						key.className = 'key'
+
+						key.appendChild(span)
+						key.appendChild(image)
+						key.appendChild(button)
+
+						div1.appendChild(key)
+					}
+				}
+			}
+
+			function listenToKeyboard(hash) {
+				document.onkeypress = function (sadgagfa) {
+					var whichKey = sadgagfa['key']
+					var site = 'http://' + hash[whichKey]
+					// console.log(site)
+					// location.href = site
+					window.open(site, '_blank')
+				}
+			}
+
+			function getFromLocalStorage(name) {
+				return JSON.parse(localStorage.getItem(name) || 'null')
+			}
+
+			function tag(tagName) {
+				return document.createElement(tagName)
+			}
+
+			function createSpan(textContent) {
+				var span = tag('span')
+				span.textContent = textContent
+				span.className = 'text'
+				return span
+			}
+
+			function createButton(id) {
+				var button = tag('button')
+				button.textContent = '编辑'
+				button.id = id
+				button.onclick = function (sdfasdfa) {
+					var button1 = sdfasdfa['target']
+					var clickKey = button1['id']
+					var image1 = button1.previousSibling
+					var newSite = prompt()
+					hash[clickKey] = newSite // hash 变更
+
+					image1.src = 'http://' + newSite + '/favicon.ico'
+					image1.onerror = function (xxx) {
+						xxx.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+					}
+					localStorage.setItem('local', JSON.stringify(hash))
+				}
+				return button
+			}
+
+			function createImg(domain) {
+				var image = tag('img')
+				if (domain) {
+					image.src = 'https://' + domain + '/favicon.ico'
+				} else {
+					image.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+				}
+				image.onerror = function (sfasdfaddas) {
+					sfasdfaddas.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+				}
+				return image
+			}
+		</script>
+	</body>
 </html>
